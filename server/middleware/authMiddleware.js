@@ -25,7 +25,8 @@ export const roleMiddleware = (...roles) => {
       if (!user) {
         return res.status(401).json({ message: 'User no longer exists' });
       }
-      if (!roles.includes(user.role)) {
+      const allowed = roles.map((role) => role.toLowerCase());
+      if (!allowed.includes(user.role.toLowerCase())) {
         return res.status(403).json({ message: 'Permission denied' });
       }
       next();
