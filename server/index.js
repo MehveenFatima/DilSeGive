@@ -9,8 +9,6 @@ import paymentRoutes from './routes/paymentRoutes.js';
 import Campaign from './models/Campaign.js';
 
 dotenv.config();
-console.log("MONGO_URI:", process.env.MONGO_URI);
-
 
 const app = express();
 const PORT = 5000;
