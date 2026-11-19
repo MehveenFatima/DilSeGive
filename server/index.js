@@ -11,7 +11,7 @@ import Campaign from './models/Campaign.js';
 dotenv.config();
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
@@ -225,7 +225,7 @@ process.on('unhandledRejection', (err) => {
 
 // Server Start IIFE
 (async () => {
-  // Start listening immediately on port 5000 for diagnostic access
+  // Start listening immediately for diagnostic access
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
@@ -235,6 +235,6 @@ process.on('unhandledRejection', (err) => {
     await seedCampaigns();
   } catch (error) {
     console.error("Database connection was unsuccessful:", error.message);
-    console.log("Portal remains active for diagnostics on port 5000.");
+    console.log(`Portal remains active for diagnostics on port ${PORT}.`);
   }
 })();
