@@ -4,10 +4,11 @@ import { CampaignCard } from "@/components/CampaignCard";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDonation } from "@/context/DonationContext";
+import type { Campaign } from "@/types";
 
 export default function Campaigns() {
   const { campaigns } = useDonation();
-  const [campaignList, setCampaignList] = useState<any[]>([]);
+  const [campaignList, setCampaignList] = useState<Campaign[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("All");
