@@ -83,12 +83,11 @@ export const verifyPayment = async (req, res) => {
       donation.paymentStatus = 'success';
       await donation.save();
 
-      // Update campaign raised amount
-      const campaign = await Campaign.findById(donation.campaignId);
-      if (campaign) {
-        campaign.raised += donation.amount;
-        await campaign.save();
-      }
+      // Update campaign raised amount atomically to avoid lost updates
+      await Campaign.updateOne(
+        { _id: donation.campaignId },
+        { $inc: { raised: donation.amount } }
+      );
 
       // Update user total donations (if needed - adding field to user model)
       const user = await User.findById(donation.donorId);
