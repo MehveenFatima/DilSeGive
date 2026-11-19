@@ -25,5 +25,9 @@ const campaignSchema = new mongoose.Schema({
   transparency: [transparencySchema]
 }, { timestamps: true });
 
+// Speeds up the newest-first listing and category/status filters
+campaignSchema.index({ category: 1, createdAt: -1 });
+campaignSchema.index({ status: 1, createdAt: -1 });
+
 const Campaign = mongoose.model('Campaign', campaignSchema);
 export default Campaign;
