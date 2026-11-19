@@ -2,7 +2,6 @@ import Stripe from 'stripe';
 import mongoose from 'mongoose';
 import Donation from '../models/Donation.js';
 import Campaign from '../models/Campaign.js';
-import User from '../models/User.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -88,13 +87,6 @@ export const verifyPayment = async (req, res) => {
         { _id: donation.campaignId },
         { $inc: { raised: donation.amount } }
       );
-
-      // Update user total donations (if needed - adding field to user model)
-      const user = await User.findById(donation.donorId);
-      if (user) {
-        // We can add a totalDonations field or just track it via donations collection
-        // For simplicity, let's assume we might want to update a field
-      }
 
       res.status(200).json({ 
         message: 'Payment verified and donation processed successfully',
