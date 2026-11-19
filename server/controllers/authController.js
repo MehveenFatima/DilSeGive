@@ -36,6 +36,8 @@ export const signup = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        ngoName: user.ngoName,
+        verified: user.verified,
       },
     });
   } catch (error) {
@@ -61,6 +63,8 @@ export const login = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        ngoName: user.ngoName,
+        verified: user.verified,
       },
     });
   } catch (error) {
