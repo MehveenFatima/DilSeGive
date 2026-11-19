@@ -29,7 +29,17 @@ export const getAllCampaigns = async (req, res) => {
       filter.$or = [{ title: pattern }, { ngo: pattern }, { location: pattern }];
     }
 
-    const campaigns = await Campaign.find(filter).sort({ createdAt: -1 });
+    // Optional pagination: ?page=2&limit=10 (the response stays a plain array;
+    // the total number of matches is sent in the X-Total-Count header)
+    let query = Campaign.find(filter).sort({ createdAt: -1 });
+    if (req.query.limit) {
+      const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 10, 1), 100);
+      const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+      query = query.skip((page - 1) * limit).limit(limit);
+      res.set('X-Total-Count', String(await Campaign.countDocuments(filter)));
+    }
+
+    const campaigns = await query;
     res.status(200).json(campaigns);
   } catch (error) {
     res.status(500).json({ message: error.message });
