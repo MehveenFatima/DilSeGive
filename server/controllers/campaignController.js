@@ -17,7 +17,12 @@ export const seedCampaigns = async (req, res) => {
 
 export const getAllCampaigns = async (req, res) => {
   try {
-    const campaigns = await Campaign.find().sort({ createdAt: -1 });
+    // Optional filters, e.g. /api/campaigns?category=Food&status=Active
+    const filter = {};
+    if (req.query.category) filter.category = String(req.query.category);
+    if (req.query.status) filter.status = String(req.query.status);
+
+    const campaigns = await Campaign.find(filter).sort({ createdAt: -1 });
     res.status(200).json(campaigns);
   } catch (error) {
     res.status(500).json({ message: error.message });
