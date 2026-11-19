@@ -228,19 +228,6 @@ export default function NgoDashboard() {
     setActive("Dashboard");
   };
 
-  const role = localStorage.getItem("role");
-  if (!role) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="animate-pulse text-muted-foreground">Loading NGO Dashboard...</p>
-      </div>
-    );
-  }
-
-  useEffect(() => {
-    if (!user) return;
-  }, [user]);
-
   useEffect(() => {
     const formattedData = globalCampaigns.map(c => ({
         ...c,
@@ -251,6 +238,16 @@ export default function NgoDashboard() {
     const filtered = user && user.name === "NGO Admin" ? formattedData.slice(0, 3) : formattedData.slice(0, 5);
     setCampaignList(filtered);
   }, [user, globalCampaigns]);
+
+  // Early return only after every hook has run (Rules of Hooks)
+  const role = localStorage.getItem("role");
+  if (!role) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="animate-pulse text-muted-foreground">Loading NGO Dashboard...</p>
+      </div>
+    );
+  }
 
   const handleVerification = async () => {
     if (!file) {
