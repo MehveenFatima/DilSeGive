@@ -7,9 +7,17 @@ export const ProtectedRoute = ({ children, role }: any) => {
     return <Navigate to="/" replace />;
   }
 
-  const user = JSON.parse(storedUser);
+  let user;
+  try {
+    user = JSON.parse(storedUser);
+  } catch {
+    // Corrupted session data: clear it and send the user home
+    localStorage.removeItem("user");
+    localStorage.removeItem("role");
+    return <Navigate to="/" replace />;
+  }
 
-  if (role && user.role.toLowerCase() !== role.toLowerCase()) {
+  if (role && user?.role?.toLowerCase() !== role.toLowerCase()) {
     return <Navigate to="/" replace />;
   }
 
