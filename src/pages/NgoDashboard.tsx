@@ -12,6 +12,17 @@ import Tesseract from "tesseract.js";
 import { toast } from "sonner";
 import axios from "axios";
 import TransparencyDashboard from "@/components/TransparencyDashboard";
+import type { Campaign } from "@/types";
+
+/** Donation saved to localStorage by the payment page */
+interface StoredDonation {
+  id?: string | number;
+  donorName?: string;
+  amount?: number | string;
+  campaignId?: string;
+  campaignTitle?: string;
+  date?: string;
+}
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: "Dashboard" },
@@ -26,8 +37,8 @@ export default function NgoDashboard() {
   const { campaigns: globalCampaigns, addCampaign, addProof } = useDonation();
   const [active, setActive] = useState("Dashboard");
   const [dragActive, setDragActive] = useState(false);
-  const [campaignList, setCampaignList] = useState<any[]>([]);
-  const [donations, setDonations] = useState<any[]>([]);
+  const [campaignList, setCampaignList] = useState<Campaign[]>([]);
+  const [donations, setDonations] = useState<StoredDonation[]>([]);
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("donations") || "[]");
@@ -38,8 +49,8 @@ export default function NgoDashboard() {
   const BASE_TOTAL_DONORS = 2073;
   const BASE_AVG_DONATION = 750;
 
-  const additionalDonors = new Set(donations.map((d: any) => d.donorName)).size;
-  const additionalAmount = donations.reduce((sum: number, d: any) => sum + Number(d.amount || 0), 0);
+  const additionalDonors = new Set(donations.map((d) => d.donorName)).size;
+  const additionalAmount = donations.reduce((sum: number, d) => sum + Number(d.amount || 0), 0);
 
   const totalDonors = BASE_TOTAL_DONORS + additionalDonors;
   const totalDonationsCount = donations.length + BASE_TOTAL_DONORS;
@@ -47,7 +58,7 @@ export default function NgoDashboard() {
   const avgDonation = Math.round(totalAmount / totalDonationsCount);
 
   // Map stored donations to match dummyTransactions format
-  const mappedStoredDonations = donations.map((d: any, idx: number) => ({
+  const mappedStoredDonations = donations.map((d, idx: number) => ({
     id: d.id || `stored-${idx}`,
     name: d.donorName || "Anonymous",
     amount: Number(d.amount || 0),
