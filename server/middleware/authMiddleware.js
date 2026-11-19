@@ -22,6 +22,9 @@ export const roleMiddleware = (...roles) => {
   return async (req, res, next) => {
     try {
       const user = await User.findById(req.user.id);
+      if (!user) {
+        return res.status(401).json({ message: 'User no longer exists' });
+      }
       if (!roles.includes(user.role)) {
         return res.status(403).json({ message: 'Permission denied' });
       }
