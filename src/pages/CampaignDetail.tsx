@@ -73,7 +73,7 @@ export default function CampaignDetail() {
         <div className="h-64 sm:h-80 relative overflow-hidden">
           <img
             src={campaign?.image || ""}
-            alt="Campaign banner"
+            alt={campaign?.title ? `${campaign.title} banner` : "Campaign banner"}
             className="w-full h-full object-cover"
             onError={(e) => {
               const target = e.currentTarget as HTMLImageElement;
@@ -149,7 +149,7 @@ export default function CampaignDetail() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                           {campaign.descriptionImages.map((img: string, idx: number) => (
                             <div key={idx} className="rounded-2xl overflow-hidden border border-border/50 shadow-sm">
-                              <img src={img} loading="lazy" className="w-full h-full object-cover max-h-64" alt="description" />
+                              <img src={img} loading="lazy" className="w-full h-full object-cover max-h-64" alt={`${campaign.title} photo ${idx + 1}`} />
                             </div>
                           ))}
                         </div>
@@ -174,7 +174,7 @@ export default function CampaignDetail() {
                                 key={index}
                                 src={img}
                                 loading="lazy"
-                                alt="proof"
+                                alt={`Proof of work ${index + 1} for ${campaign.title}`}
                                 className="rounded-xl object-cover w-full h-40"
                                 onError={(e) => {
                                   const target = e.currentTarget as HTMLImageElement;
@@ -266,7 +266,7 @@ export default function CampaignDetail() {
                               <div key={proof.id} className="glass-card rounded-2xl overflow-hidden border border-border/50 hover:border-primary/30 transition-colors">
                                 <div className="grid sm:grid-cols-[180px,1fr] gap-0">
                                   <div className="h-40 sm:h-auto overflow-hidden bg-secondary/20">
-                                     <img src={proof.image} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" alt="expense proof" />
+                                     <img src={proof.image} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" alt={proof.description ? `Expense proof: ${proof.description}` : "Expense proof"} />
                                   </div>
                                   <div className="p-5 flex flex-col justify-center">
                                     <div className="flex justify-between items-start mb-3">
