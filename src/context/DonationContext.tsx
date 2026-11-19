@@ -1,22 +1,21 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { campaigns as staticCampaigns } from "@/data/campaigns";
+import type { Campaign, Proof } from "@/types";
 
-// Static campaigns can gain uploaded proofs at runtime, so allow an optional proofs list
-type CampaignProof = { id?: string | number; score?: number; [key: string]: unknown };
-type StaticCampaign = (typeof staticCampaigns)[number] & { proofs?: CampaignProof[] };
-const initialCampaigns: StaticCampaign[] = staticCampaigns;
+// Static campaigns can gain uploaded proofs at runtime
+const initialCampaigns: Campaign[] = staticCampaigns;
 
 interface DonationContextType {
-  campaigns: any[];
+  campaigns: Campaign[];
   donate: (campaignId: string, amount: number) => void;
-  addCampaign: (newCampaign: any) => void;
-  addProof: (campaignId: string, proofData: any) => void;
+  addCampaign: (newCampaign: Campaign) => void;
+  addProof: (campaignId: string, proofData: Proof) => void;
 }
 
 const DonationContext = createContext<DonationContextType | null>(null);
 
 export const DonationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [campaigns, setCampaigns] = useState<any[]>([]);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
 
   useEffect(() => {
     const savedLocal = localStorage.getItem("local_campaigns");
@@ -37,7 +36,7 @@ export const DonationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         // Ensure arrays are merged or overridden correctly
         proofs: combinedProofs,
         // Auto calculate isAIVerified
-        isAIVerified: combinedProofs.some((p: any) => p.score >= 90)
+        isAIVerified: combinedProofs.some((p: Proof) => p.score >= 90)
       };
       
       if (!merged.find(c => c.id === staticCamp.id)) {
@@ -48,7 +47,7 @@ export const DonationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     // Ensure all campaigns have isAIVerified calculated
     const finalMerged = merged.map(c => ({
       ...c,
-      isAIVerified: c.proofs?.some((p: any) => p.score >= 90) || false
+      isAIVerified: c.proofs?.some((p: Proof) => p.score >= 90) || false
     }));
 
     setCampaigns(finalMerged);
@@ -72,10 +71,10 @@ export const DonationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     });
   };
 
-  const addCampaign = (newCampaign: any) => {
+  const addCampaign = (newCampaign: Campaign) => {
     const campaignWithVerify = {
       ...newCampaign,
-      isAIVerified: newCampaign.proofs?.some((p: any) => p.score >= 90) || false
+      isAIVerified: newCampaign.proofs?.some((p: Proof) => p.score >= 90) || false
     };
     
     setCampaigns((prev) => [campaignWithVerify, ...prev]);
@@ -85,7 +84,7 @@ export const DonationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.setItem("local_campaigns", JSON.stringify([campaignWithVerify, ...localCampaigns]));
   };
 
-  const addProof = (campaignId: string, proofData: any) => {
+  const addProof = (campaignId: string, proofData: Proof) => {
     setCampaigns((prev) => {
       const updated = prev.map((c) => {
         if (c.id === campaignId) {
@@ -94,7 +93,7 @@ export const DonationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             ...c,
             proofs: newProofs,
             // Automatic calculation based on verified proof condition (score >= 90)
-            isAIVerified: newProofs.some((p: any) => p.score >= 90),
+            isAIVerified: newProofs.some((p: Proof) => p.score >= 90),
             // Updated after proof submission: raised amount
             raisedAmount: (c.raisedAmount || 0) + Number(proofData.amount),
           };
@@ -107,14 +106,14 @@ export const DonationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     });
   };
 
-  const syncToLocalStorage = (allCampaigns: any[], updatedId: string) => {
+  const syncToLocalStorage = (allCampaigns: Campaign[], updatedId: string) => {
     // Determine if it's a local campaign
     const localSaved = localStorage.getItem("local_campaigns");
     const localCampaigns = localSaved ? JSON.parse(localSaved) : [];
-    const isLocal = localCampaigns.find((lc: any) => lc.id === updatedId);
+    const isLocal = localCampaigns.find((lc: Campaign) => lc.id === updatedId);
 
     if (isLocal) {
-      const updatedLocal = allCampaigns.filter(c => localCampaigns.find((lc: any) => lc.id === c.id));
+      const updatedLocal = allCampaigns.filter(c => localCampaigns.find((lc: Campaign) => lc.id === c.id));
       localStorage.setItem("local_campaigns", JSON.stringify(updatedLocal));
     } else {
       // It's a static campaign, update overrides
@@ -127,7 +126,7 @@ export const DonationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           raisedAmount: updatedCampaign.raisedAmount,
           donors: updatedCampaign.donors,
           isAIVerified: updatedCampaign.isAIVerified,
-          proofs: updatedCampaign.proofs?.filter((p: any) => !initialCampaigns.find(sc => sc.id === updatedId)?.proofs?.find((sp: any) => sp.id === p.id))
+          proofs: updatedCampaign.proofs?.filter((p: Proof) => !initialCampaigns.find(sc => sc.id === updatedId)?.proofs?.find((sp: Proof) => sp.id === p.id))
         };
         localStorage.setItem("static_campaign_overrides", JSON.stringify(overrides));
       }
