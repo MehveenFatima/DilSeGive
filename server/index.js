@@ -95,9 +95,20 @@ process.on('unhandledRejection', (err) => {
 // Server Start IIFE
 (async () => {
   // Start listening immediately for diagnostic access
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
+
+  // Close the HTTP server and database connection cleanly on shutdown
+  const shutdown = (signal) => {
+    console.log(`${signal} received, shutting down...`);
+    server.close(async () => {
+      await mongoose.connection.close();
+      process.exit(0);
+    });
+  };
+  process.on('SIGINT', () => shutdown('SIGINT'));
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
 
   try {
     await connectDB();
