@@ -73,14 +73,16 @@ export const verifyPayment = async (req, res) => {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     if (session.payment_status === 'paid') {
-      const donation = await Donation.findOne({ stripeSessionId: sessionId });
-      if (!donation || donation.paymentStatus === 'success') {
+      // Atomically flip pending -> success so repeated or concurrent
+      // verify calls can never count the same donation twice
+      const donation = await Donation.findOneAndUpdate(
+        { stripeSessionId: sessionId, paymentStatus: { $ne: 'success' } },
+        { paymentStatus: 'success' },
+        { new: true }
+      );
+      if (!donation) {
         return res.status(200).json({ message: 'Donation already processed or not found' });
       }
-
-      // Update donation status
-      donation.paymentStatus = 'success';
-      await donation.save();
 
       // Update campaign raised amount atomically to avoid lost updates
       await Campaign.updateOne(
