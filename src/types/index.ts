@@ -67,6 +67,7 @@ export interface Campaign {
   donors?: number;
   updates?: Array<string | CampaignUpdate>;
   proofImages?: string[];
+  descriptionImages?: string[];
   proofLinks?: string[];
   proofs?: Proof[];
   transparency?: CampaignExpense[];
