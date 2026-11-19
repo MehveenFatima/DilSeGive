@@ -68,6 +68,9 @@ export const createCheckoutSession = async (req, res) => {
 export const verifyPayment = async (req, res) => {
   try {
     const { sessionId } = req.body;
+    if (!sessionId) {
+      return res.status(400).json({ message: 'sessionId is required' });
+    }
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     if (session.payment_status === 'paid') {
