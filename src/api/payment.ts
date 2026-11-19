@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000/api';
+import { API_URL } from './config';
 
 export const createCheckoutSession = async (amount: number, campaignId: string, token: string) => {
   const response = await fetch(`${API_URL}/payment/create-checkout-session`, {
