@@ -10,8 +10,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const createCheckoutSession = async (req, res) => {
   try {
-    const { amount, campaignId } = req.body;
+    const { campaignId } = req.body;
+    const amount = Number(req.body.amount);
     const donorId = req.user.id;
+
+    if (!Number.isFinite(amount) || amount < 1) {
+      return res.status(400).json({ message: 'Donation amount must be at least ₹1' });
+    }
 
     const campaign = await Campaign.findById(campaignId);
     if (!campaign) return res.status(404).json({ message: 'Campaign not found' });
