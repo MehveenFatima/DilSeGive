@@ -8,8 +8,10 @@ import campaignRoutes from './routes/campaignRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import Campaign from './models/Campaign.js';
 import seedData from './data/seedCampaigns.js';
+import { checkEnv } from './config/env.js';
 
 dotenv.config();
+checkEnv();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
