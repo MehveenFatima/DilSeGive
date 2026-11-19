@@ -76,7 +76,7 @@ export default function CampaignDetail() {
             alt="Campaign banner"
             className="w-full h-full object-cover"
             onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = "https://picsum.photos/300";
+              (e.currentTarget as HTMLImageElement).src = "/campaign-placeholder.svg";
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
@@ -175,7 +175,7 @@ export default function CampaignDetail() {
                                 alt="proof"
                                 className="rounded-xl object-cover w-full h-40"
                                 onError={(e) => {
-                                  (e.currentTarget as HTMLImageElement).src = "https://picsum.photos/300";
+                                  (e.currentTarget as HTMLImageElement).src = "/campaign-placeholder.svg";
                                 }}
                               />
                             ))}
