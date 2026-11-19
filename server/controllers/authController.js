@@ -21,7 +21,7 @@ export const signup = async (req, res) => {
     }
     const userExists = await authService.findUserByEmail(email);
     if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(409).json({ message: 'User already exists' });
     }
     const user = await authService.createUser({ name, email, password, role: normalisedRole, ngoName });
     const token = authService.generateToken(user._id);
