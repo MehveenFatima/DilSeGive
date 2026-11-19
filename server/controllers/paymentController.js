@@ -31,7 +31,7 @@ export const createCheckoutSession = async (req, res) => {
               name: campaign.title,
               description: `Donation for ${campaign.ngo}`,
             },
-            unit_amount: amount * 100, // Stripe uses paise for INR
+            unit_amount: Math.round(amount * 100), // Stripe uses paise for INR
           },
           quantity: 1,
         },
