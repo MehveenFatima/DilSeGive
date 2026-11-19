@@ -30,6 +30,8 @@ export function CampaignCard({ id, title, ngo, image, raised, goal, category, lo
         <img 
           src={image} 
           alt={title} 
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).src = "https://picsum.photos/300";
