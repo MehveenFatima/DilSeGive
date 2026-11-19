@@ -15,7 +15,10 @@ export const authMiddleware = async (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(401).json({ message: 'Token is not valid' });
+    const message = error.name === 'TokenExpiredError'
+      ? 'Session expired, please log in again'
+      : 'Token is not valid';
+    res.status(401).json({ message });
   }
 };
 
