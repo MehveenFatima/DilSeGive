@@ -1,6 +1,4 @@
 import * as authService from '../services/authService.js';
-import User from '../models/User.js';
-import jwt from 'jsonwebtoken';
 
 // Roles a user may choose for themselves. Admin accounts must be created manually.
 const SELF_SERVICE_ROLES = { donor: 'Donor', ngo: 'NGO' };
