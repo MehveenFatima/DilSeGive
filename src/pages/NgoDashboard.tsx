@@ -14,6 +14,22 @@ import axios from "axios";
 import TransparencyDashboard from "@/components/TransparencyDashboard";
 import type { Campaign } from "@/types";
 
+/** Result returned by the expense verification step */
+interface VerificationResult {
+  extractedAmount: string | number;
+  fraudScore: number;
+  status: string;
+  reasoning: string;
+}
+
+/** Verification result as shown in the dashboard */
+interface VerificationState {
+  extractedAmount: string | number;
+  fraudScore: number;
+  status: string;
+  reason: string;
+}
+
 /** Donation saved to localStorage by the payment page */
 interface StoredDonation {
   id?: string | number;
@@ -78,7 +94,7 @@ export default function NgoDashboard() {
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState("");
   const [ocrDescription, setOcrDescription] = useState("");
-  const [verification, setVerification] = useState<any>(null);
+  const [verification, setVerification] = useState<VerificationState | null>(null);
   const [aiAnalysis, setAiAnalysis] = useState("");
   const [selectedCampaignId, setSelectedCampaignId] = useState("");
   const [txHash, setTxHash] = useState<string | null>(null);
@@ -93,7 +109,7 @@ export default function NgoDashboard() {
     return "0x" + randomHex;
   }
 
-  async function mockAIVerification(data: any) {
+  async function mockAIVerification(data: { amount: string }): Promise<VerificationResult> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({
@@ -255,7 +271,7 @@ export default function NgoDashboard() {
 
     try {
       // Mock AI Verification
-      const result: any = await mockAIVerification({ amount });
+      const result = await mockAIVerification({ amount });
       
       setVerification({
         extractedAmount: result.extractedAmount,
@@ -272,7 +288,7 @@ export default function NgoDashboard() {
         toast.warning(`AI Verification Status: ${result.status}`);
       }
 
-    } catch (error: any) {
+    } catch (error) {
       console.error("AI Verification Error:", error);
       toast.error("AI verification failed.");
       
