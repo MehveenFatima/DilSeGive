@@ -74,8 +74,8 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'login' }: AuthModalPr
       } else {
         throw new Error("Invalid credentials");
       }
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Something went wrong");
     } finally {
       setIsLoading(false);
     }
@@ -104,8 +104,8 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'login' }: AuthModalPr
       } else if (newUser.role === "ngo") {
         navigate("/ngo-dashboard");
       }
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Something went wrong");
     } finally {
       setIsLoading(false);
     }
