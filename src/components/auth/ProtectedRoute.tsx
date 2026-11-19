@@ -1,6 +1,13 @@
+import type { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 
-export const ProtectedRoute = ({ children, role }: any) => {
+interface ProtectedRouteProps {
+  children: ReactNode;
+  /** Role required to view the route; any logged-in user if omitted */
+  role?: string;
+}
+
+export const ProtectedRoute = ({ children, role }: ProtectedRouteProps) => {
   const storedUser = localStorage.getItem("user");
 
   if (!storedUser) {
