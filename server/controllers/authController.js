@@ -2,6 +2,9 @@ import * as authService from '../services/authService.js';
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 
+// Roles a user may choose for themselves. Admin accounts must be created manually.
+const SELF_SERVICE_ROLES = { donor: 'Donor', ngo: 'NGO' };
+
 export const signup = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -11,11 +14,15 @@ export const signup = async (req, res) => {
     if (String(password).length < 6) {
       return res.status(400).json({ message: 'Password must be at least 6 characters long' });
     }
+    const normalisedRole = SELF_SERVICE_ROLES[String(role || 'donor').toLowerCase()];
+    if (!normalisedRole) {
+      return res.status(400).json({ message: 'Role must be either Donor or NGO' });
+    }
     const userExists = await authService.findUserByEmail(email);
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
     }
-    const user = await authService.createUser({ name, email, password, role });
+    const user = await authService.createUser({ name, email, password, role: normalisedRole });
     const token = authService.generateToken(user._id);
     res.status(201).json({
       token,
