@@ -5,6 +5,7 @@ import { TrustBadge } from "@/components/TrustBadge";
 import { motion } from "framer-motion";
 import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { Bot } from "lucide-react";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 
 const pieData = [
   { name: "Food & Nutrition", value: 42, color: "hsl(239, 84%, 67%)" },
@@ -37,6 +38,7 @@ const topCards = [
 ];
 
 export default function Transparency() {
+  useDocumentTitle("Transparency");
   return (
     <div className="min-h-screen bg-background">
       <Navbar />

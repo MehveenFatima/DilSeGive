@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { LayoutDashboard, Heart, FileBarChart, User } from "lucide-react";
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/donor-dashboard" },
@@ -12,6 +13,7 @@ const sidebarItems = [
 ];
 
 export default function DonorDashboard() {
+  useDocumentTitle("Donor Dashboard");
   const location = useLocation();
   const navigate = useNavigate();
 

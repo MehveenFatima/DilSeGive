@@ -11,6 +11,7 @@ import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { useDonation } from "@/context/DonationContext";
 import type { Campaign, CampaignExpense, Proof } from "@/types";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 
 const tabs = ["Overview", "Updates", "Transparency"];
 
@@ -21,6 +22,7 @@ export default function CampaignDetail() {
   const { campaigns: liveCampaigns } = useDonation();
   const [activeTab, setActiveTab] = useState("Overview");
   const [campaign, setCampaign] = useState<Campaign | null>(null);
+  useDocumentTitle(campaign?.title ?? "Campaign");
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAmount, setSelectedAmount] = useState<number>(1000);
   const [isProcessing, setIsProcessing] = useState(false);

@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 
 export default function PaymentSuccess() {
+  useDocumentTitle("Payment Successful");
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying');

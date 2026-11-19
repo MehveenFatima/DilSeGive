@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { motion, AnimatePresence } from "framer-motion";
 import { CreditCard, Lock, ShieldCheck, ArrowLeft, Heart, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 
 /** Details printed on the PDF receipt and certificate */
 interface DonationDocumentData {
@@ -62,6 +63,7 @@ const CardLogo = ({ type }: { type: string | null }) => {
 };
 
 const PaymentPage = () => {
+  useDocumentTitle("Donate");
   const { state } = useLocation();
   const navigate = useNavigate();
   const { donate } = useDonation();

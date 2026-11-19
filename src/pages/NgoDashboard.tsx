@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import axios from "axios";
 import TransparencyDashboard from "@/components/TransparencyDashboard";
 import type { Campaign } from "@/types";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 
 /** Result returned by the expense verification step */
 interface VerificationResult {
@@ -48,6 +49,7 @@ const sidebarItems = [
 ];
 
 export default function NgoDashboard() {
+  useDocumentTitle("NGO Dashboard");
   const { user } = useAuth();
   const location = useLocation();
   const { campaigns: globalCampaigns, addCampaign, addProof } = useDonation();

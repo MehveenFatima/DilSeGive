@@ -7,8 +7,10 @@ import { useEffect, useState } from "react";
 import { campaigns as dummyCampaigns } from "@/data/campaigns";
 import { toast } from "sonner";
 import type { Campaign } from "@/types";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 
 export default function AdminDashboard() {
+  useDocumentTitle("Admin Panel");
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
 
