@@ -45,7 +45,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-border mt-8 pt-6 text-center text-sm text-muted-foreground">
-          © 2026 dilsegive. Built with ❤️ for transparent giving.
+          © {new Date().getFullYear()} DilSeGive. Built with ❤️ for transparent giving.
         </div>
       </div>
     </footer>
