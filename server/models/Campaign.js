@@ -12,10 +12,10 @@ const transparencySchema = new mongoose.Schema({
 });
 
 const campaignSchema = new mongoose.Schema({
-  title: { type: String, required: true },
+  title: { type: String, required: true, trim: true },
   description: { type: String, required: true },
-  goal: { type: Number, required: true }, // goalAmount
-  raised: { type: Number, default: 0 }, // raisedAmount
+  goal: { type: Number, required: true, min: 1 }, // goalAmount
+  raised: { type: Number, default: 0, min: 0 }, // raisedAmount
   location: { type: String, required: true }, // city, state
   category: { type: String, enum: ['Food', 'Education', 'Healthcare', 'Relief', 'Development'], required: true },
   ngo: { type: String, required: true }, // ngoName
@@ -24,6 +24,10 @@ const campaignSchema = new mongoose.Schema({
   updates: [updateSchema],
   transparency: [transparencySchema]
 }, { timestamps: true });
+
+// Speeds up the newest-first listing and category/status filters
+campaignSchema.index({ category: 1, createdAt: -1 });
+campaignSchema.index({ status: 1, createdAt: -1 });
 
 const Campaign = mongoose.model('Campaign', campaignSchema);
 export default Campaign;

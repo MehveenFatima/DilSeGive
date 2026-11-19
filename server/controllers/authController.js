@@ -1,4 +1,5 @@
 import * as authService from '../services/authService.js';
+import { isValidEmail, isValidPassword } from '../utils/validators.js';
 
 // Roles a user may choose for themselves. Admin accounts must be created manually.
 const SELF_SERVICE_ROLES = { donor: 'Donor', ngo: 'NGO' };
@@ -9,7 +10,10 @@ export const signup = async (req, res) => {
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Name, email and password are required' });
     }
-    if (String(password).length < 6) {
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ message: 'Please enter a valid email address' });
+    }
+    if (!isValidPassword(password)) {
       return res.status(400).json({ message: 'Password must be at least 6 characters long' });
     }
     const normalisedRole = SELF_SERVICE_ROLES[String(role || 'donor').toLowerCase()];
@@ -32,6 +36,8 @@ export const signup = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        ngoName: user.ngoName,
+        verified: user.verified,
       },
     });
   } catch (error) {
@@ -57,6 +63,8 @@ export const login = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        ngoName: user.ngoName,
+        verified: user.verified,
       },
     });
   } catch (error) {

@@ -2,11 +2,21 @@ import Stripe from 'stripe';
 import mongoose from 'mongoose';
 import Donation from '../models/Donation.js';
 import Campaign from '../models/Campaign.js';
-import dotenv from 'dotenv';
 
-dotenv.config();
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// Create the Stripe client on first use so the server can start
+// (and serve non-payment routes) before STRIPE_SECRET_KEY is configured
+let stripeClient;
+const getStripe = () => {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    const error = new Error('Payments are not configured: STRIPE_SECRET_KEY is missing');
+    error.status = 503;
+    throw error;
+  }
+  if (!stripeClient) {
+    stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY);
+  }
+  return stripeClient;
+};
 
 export const createCheckoutSession = async (req, res) => {
   try {
@@ -24,7 +34,7 @@ export const createCheckoutSession = async (req, res) => {
     const campaign = await Campaign.findById(campaignId);
     if (!campaign) return res.status(404).json({ message: 'Campaign not found' });
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
         {
@@ -60,7 +70,7 @@ export const createCheckoutSession = async (req, res) => {
 
     res.status(200).json({ url: session.url });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(error.status || 500).json({ message: error.message });
   }
 };
 
@@ -70,7 +80,7 @@ export const verifyPayment = async (req, res) => {
     if (!sessionId) {
       return res.status(400).json({ message: 'sessionId is required' });
     }
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const session = await getStripe().checkout.sessions.retrieve(sessionId);
 
     if (session.payment_status === 'paid') {
       // Atomically flip pending -> success so repeated or concurrent
@@ -98,6 +108,6 @@ export const verifyPayment = async (req, res) => {
       res.status(400).json({ message: 'Payment not completed' });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(error.status || 500).json({ message: error.message });
   }
 };

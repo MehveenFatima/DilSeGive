@@ -107,7 +107,7 @@ npm run dev             # opens on http://localhost:8080
 
 ## 🔌 API Reference
 
-Base URL: `http://localhost:5000/api`. Routes marked 🔒 need an `Authorization: Bearer <token>` header.
+Base URL: `http://localhost:5000/api`. Routes marked 🔒 need an `Authorization: Bearer <token>` header. Login and signup are limited to 20 attempts per 15 minutes.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -116,7 +116,7 @@ Base URL: `http://localhost:5000/api`. Routes marked 🔒 need an `Authorization
 | `POST` | `/auth/login` | Log in and receive a JWT |
 | `GET` | `/user/profile` 🔒 | Current user's profile |
 | `GET` | `/user/donations` 🔒 | Current donor's successful donations |
-| `GET` | `/campaigns` | List all campaigns, newest first |
+| `GET` | `/campaigns` | List campaigns, newest first. Optional: `?category=`, `?status=`, `?q=` (search), `?page=&limit=` (total in `X-Total-Count`) |
 | `GET` | `/campaigns/:id` | Get one campaign with updates and expenses |
 | `POST` | `/campaigns/seed` 🔒 | Re-seed sample campaigns (Admin only) |
 | `POST` | `/payment/create-checkout-session` 🔒 | Start a Stripe Checkout for a donation (`amount`, `campaignId`) |
@@ -151,6 +151,8 @@ For test payments, use Stripe's test card `4242 4242 4242 4242` with any future 
 |---------|-------------|
 | `npm run dev` | Start the API with auto-reload (nodemon) |
 | `npm start` | Start the API with Node |
+| `npm run seed` | Replace all campaigns with the sample data |
+| `npm test` | Run backend unit tests (Node test runner) |
 
 ## 🤝 Contributing
 
