@@ -22,6 +22,13 @@ export const getAllCampaigns = async (req, res) => {
     if (req.query.category) filter.category = String(req.query.category);
     if (req.query.status) filter.status = String(req.query.status);
 
+    // Case-insensitive search across title, NGO and location, e.g. ?q=hyderabad
+    if (req.query.q) {
+      const escaped = String(req.query.q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const pattern = new RegExp(escaped, 'i');
+      filter.$or = [{ title: pattern }, { ngo: pattern }, { location: pattern }];
+    }
+
     const campaigns = await Campaign.find(filter).sort({ createdAt: -1 });
     res.status(200).json(campaigns);
   } catch (error) {
