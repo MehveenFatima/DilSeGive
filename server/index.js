@@ -49,6 +49,11 @@ app.get('/', (req, res) => {
   res.send('DilSeGive Backend API is running...');
 });
 
+// Unknown API routes
+app.use('/api', (req, res) => {
+  res.status(404).json({ message: `Route not found: ${req.method} ${req.originalUrl}` });
+});
+
 
 const seedCampaigns = async () => {
   try {
