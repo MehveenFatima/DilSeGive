@@ -8,7 +8,7 @@ export const generateToken = (userId) => {
 };
 
 export const findUserByEmail = async (email) => {
-  return await User.findOne({ email });
+  return await User.findOne({ email: String(email).trim().toLowerCase() });
 };
 
 export const createUser = async (userData) => {
