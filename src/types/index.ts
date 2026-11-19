@@ -71,5 +71,8 @@ export interface Campaign {
   proofs?: Proof[];
   transparency?: CampaignExpense[];
   isAIVerified?: boolean;
+  /** Overall verification result: Verified, Suspicious or Fraud Risk */
+  verificationStatus?: string;
+  verification?: { status?: string };
   status?: string;
 }
