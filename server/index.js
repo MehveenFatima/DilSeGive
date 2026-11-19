@@ -9,6 +9,7 @@ import paymentRoutes from './routes/paymentRoutes.js';
 import Campaign from './models/Campaign.js';
 import seedData from './data/seedCampaigns.js';
 import { checkEnv } from './config/env.js';
+import { errorHandler } from './middleware/errorMiddleware.js';
 
 dotenv.config();
 checkEnv();
@@ -53,6 +54,9 @@ app.get('/', (req, res) => {
 app.use('/api', (req, res) => {
   res.status(404).json({ message: `Route not found: ${req.method} ${req.originalUrl}` });
 });
+
+// Error handler (must be registered last)
+app.use(errorHandler);
 
 
 const seedCampaigns = async () => {
