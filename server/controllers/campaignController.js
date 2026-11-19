@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Campaign from '../models/Campaign.js';
 import campaignsData from '../data/seedCampaigns.js';
 
@@ -25,6 +26,9 @@ export const getAllCampaigns = async (req, res) => {
 
 export const getCampaignById = async (req, res) => {
   try {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(404).json({ message: 'Campaign not found' });
+    }
     const campaign = await Campaign.findById(req.params.id);
     if (!campaign) return res.status(404).json({ message: 'Campaign not found' });
     res.status(200).json(campaign);
