@@ -18,5 +18,9 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
+  },
+  "description": "REST API for DilSeGive: auth, campaigns and Stripe donations",
+  "engines": {
+    "node": ">=18"
   }
 }

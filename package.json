@@ -1,5 +1,5 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "dilsegive",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -92,9 +92,17 @@
     "vite": "^5.4.19",
     "vitest": "^3.2.4"
   },
-  "description": "TODO: Document your project here",
-  "main": "eslint.config.js",
-  "keywords": [],
-  "author": "",
+  "description": "DilSeGive - a transparent donation platform connecting donors with verified NGO campaigns",
+  "keywords": [
+    "donation",
+    "ngo",
+    "crowdfunding",
+    "transparency",
+    "react",
+    "express",
+    "mongodb",
+    "stripe"
+  ],
+  "author": "Mehveen Fatima",
   "license": "ISC"
 }
