@@ -6,9 +6,10 @@ import { ShieldCheck, Users, Eye, Trash2, CheckCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { campaigns as dummyCampaigns } from "@/data/campaigns";
 import { toast } from "sonner";
+import type { Campaign } from "@/types";
 
 export default function AdminDashboard() {
-  const [campaigns, setCampaigns] = useState<any[]>([]);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

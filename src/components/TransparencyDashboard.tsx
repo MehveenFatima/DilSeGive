@@ -18,9 +18,10 @@ import {
   AreaChart,
   Area
 } from "recharts";
+import type { Campaign } from "@/types";
 
 interface TransparencyDashboardProps {
-  campaigns: any[];
+  campaigns: Campaign[];
 }
 
 const COLORS = [

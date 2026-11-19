@@ -12,6 +12,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CreditCard, Lock, ShieldCheck, ArrowLeft, Heart, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
+/** Details printed on the PDF receipt and certificate */
+interface DonationDocumentData {
+  id?: string | number;
+  name: string;
+  amount: number | string;
+  campaign: string;
+  date: string;
+}
+
 // Card Logo Components
 const CardLogo = ({ type }: { type: string | null }) => {
   if (!type) return null;
@@ -62,7 +71,7 @@ const PaymentPage = () => {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1); // 1: Payment, 2: Success
 
-  const generateReceipt = (data: any) => {
+  const generateReceipt = (data: DonationDocumentData) => {
     const doc = new jsPDF();
     doc.setFont("Helvetica");
 
@@ -138,7 +147,7 @@ const PaymentPage = () => {
     doc.save(`DSG_Receipt_${Date.now()}.pdf`);
   };
 
-  const generateCertificate = (data: any) => {
+  const generateCertificate = (data: DonationDocumentData) => {
     const doc = new jsPDF("l", "mm", "a4");
     const width = doc.internal.pageSize.getWidth();
     const height = doc.internal.pageSize.getHeight();

@@ -1,6 +1,7 @@
 import { API_URL } from './config';
+import type { LoginCredentials, SignupData } from '@/types';
 
-export const signup = async (userData: any) => {
+export const signup = async (userData: SignupData) => {
   const response = await fetch(`${API_URL}/auth/signup`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -11,7 +12,7 @@ export const signup = async (userData: any) => {
   return data;
 };
 
-export const login = async (credentials: any) => {
+export const login = async (credentials: LoginCredentials) => {
   const response = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

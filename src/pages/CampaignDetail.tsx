@@ -10,6 +10,7 @@ import { campaigns } from "@/data/campaigns";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { useDonation } from "@/context/DonationContext";
+import type { Campaign, CampaignExpense, Proof } from "@/types";
 
 const tabs = ["Overview", "Updates", "Transparency"];
 
@@ -19,7 +20,7 @@ export default function CampaignDetail() {
   const { user } = useAuth();
   const { campaigns: liveCampaigns } = useDonation();
   const [activeTab, setActiveTab] = useState("Overview");
-  const [campaign, setCampaign] = useState<any>(null);
+  const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAmount, setSelectedAmount] = useState<number>(1000);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -222,7 +223,7 @@ export default function CampaignDetail() {
                       )}
                       
                       {campaign.transparency && campaign.transparency.length > 0 ? (
-                        campaign.transparency.map((e: any, i: number) => (
+                        campaign.transparency.map((e: CampaignExpense, i: number) => (
                           <div key={i} className="flex items-center justify-between p-3 bg-secondary/30 rounded-xl">
                             <div>
                               <p className="text-sm font-medium">{e.purpose}</p>
@@ -256,7 +257,7 @@ export default function CampaignDetail() {
                              Digital Proof of Expenditure
                           </h4>
                           <div className="space-y-4">
-                            {campaign.proofs.map((proof: any) => (
+                            {campaign.proofs.map((proof: Proof) => (
                               <div key={proof.id} className="glass-card rounded-2xl overflow-hidden border border-border/50 hover:border-primary/30 transition-colors">
                                 <div className="grid sm:grid-cols-[180px,1fr] gap-0">
                                   <div className="h-40 sm:h-auto overflow-hidden bg-secondary/20">

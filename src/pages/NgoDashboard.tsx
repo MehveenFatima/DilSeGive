@@ -12,6 +12,33 @@ import Tesseract from "tesseract.js";
 import { toast } from "sonner";
 import axios from "axios";
 import TransparencyDashboard from "@/components/TransparencyDashboard";
+import type { Campaign } from "@/types";
+
+/** Result returned by the expense verification step */
+interface VerificationResult {
+  extractedAmount: string | number;
+  fraudScore: number;
+  status: string;
+  reasoning: string;
+}
+
+/** Verification result as shown in the dashboard */
+interface VerificationState {
+  extractedAmount: string | number;
+  fraudScore: number;
+  status: string;
+  reason: string;
+}
+
+/** Donation saved to localStorage by the payment page */
+interface StoredDonation {
+  id?: string | number;
+  donorName?: string;
+  amount?: number | string;
+  campaignId?: string;
+  campaignTitle?: string;
+  date?: string;
+}
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: "Dashboard" },
@@ -26,8 +53,8 @@ export default function NgoDashboard() {
   const { campaigns: globalCampaigns, addCampaign, addProof } = useDonation();
   const [active, setActive] = useState("Dashboard");
   const [dragActive, setDragActive] = useState(false);
-  const [campaignList, setCampaignList] = useState<any[]>([]);
-  const [donations, setDonations] = useState<any[]>([]);
+  const [campaignList, setCampaignList] = useState<Campaign[]>([]);
+  const [donations, setDonations] = useState<StoredDonation[]>([]);
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("donations") || "[]");
@@ -38,8 +65,8 @@ export default function NgoDashboard() {
   const BASE_TOTAL_DONORS = 2073;
   const BASE_AVG_DONATION = 750;
 
-  const additionalDonors = new Set(donations.map((d: any) => d.donorName)).size;
-  const additionalAmount = donations.reduce((sum: number, d: any) => sum + Number(d.amount || 0), 0);
+  const additionalDonors = new Set(donations.map((d) => d.donorName)).size;
+  const additionalAmount = donations.reduce((sum: number, d) => sum + Number(d.amount || 0), 0);
 
   const totalDonors = BASE_TOTAL_DONORS + additionalDonors;
   const totalDonationsCount = donations.length + BASE_TOTAL_DONORS;
@@ -47,7 +74,7 @@ export default function NgoDashboard() {
   const avgDonation = Math.round(totalAmount / totalDonationsCount);
 
   // Map stored donations to match dummyTransactions format
-  const mappedStoredDonations = donations.map((d: any, idx: number) => ({
+  const mappedStoredDonations = donations.map((d, idx: number) => ({
     id: d.id || `stored-${idx}`,
     name: d.donorName || "Anonymous",
     amount: Number(d.amount || 0),
@@ -67,7 +94,7 @@ export default function NgoDashboard() {
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState("");
   const [ocrDescription, setOcrDescription] = useState("");
-  const [verification, setVerification] = useState<any>(null);
+  const [verification, setVerification] = useState<VerificationState | null>(null);
   const [aiAnalysis, setAiAnalysis] = useState("");
   const [selectedCampaignId, setSelectedCampaignId] = useState("");
   const [txHash, setTxHash] = useState<string | null>(null);
@@ -82,7 +109,7 @@ export default function NgoDashboard() {
     return "0x" + randomHex;
   }
 
-  async function mockAIVerification(data: any) {
+  async function mockAIVerification(data: { amount: string }): Promise<VerificationResult> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({
@@ -201,19 +228,6 @@ export default function NgoDashboard() {
     setActive("Dashboard");
   };
 
-  const role = localStorage.getItem("role");
-  if (!role) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="animate-pulse text-muted-foreground">Loading NGO Dashboard...</p>
-      </div>
-    );
-  }
-
-  useEffect(() => {
-    if (!user) return;
-  }, [user]);
-
   useEffect(() => {
     const formattedData = globalCampaigns.map(c => ({
         ...c,
@@ -224,6 +238,16 @@ export default function NgoDashboard() {
     const filtered = user && user.name === "NGO Admin" ? formattedData.slice(0, 3) : formattedData.slice(0, 5);
     setCampaignList(filtered);
   }, [user, globalCampaigns]);
+
+  // Early return only after every hook has run (Rules of Hooks)
+  const role = localStorage.getItem("role");
+  if (!role) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="animate-pulse text-muted-foreground">Loading NGO Dashboard...</p>
+      </div>
+    );
+  }
 
   const handleVerification = async () => {
     if (!file) {
@@ -244,7 +268,7 @@ export default function NgoDashboard() {
 
     try {
       // Mock AI Verification
-      const result: any = await mockAIVerification({ amount });
+      const result = await mockAIVerification({ amount });
       
       setVerification({
         extractedAmount: result.extractedAmount,
@@ -261,7 +285,7 @@ export default function NgoDashboard() {
         toast.warning(`AI Verification Status: ${result.status}`);
       }
 
-    } catch (error: any) {
+    } catch (error) {
       console.error("AI Verification Error:", error);
       toast.error("AI verification failed.");
       
