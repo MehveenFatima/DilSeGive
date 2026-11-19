@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import mongoose from 'mongoose';
 import Donation from '../models/Donation.js';
 import Campaign from '../models/Campaign.js';
 import User from '../models/User.js';
@@ -18,6 +19,9 @@ export const createCheckoutSession = async (req, res) => {
       return res.status(400).json({ message: 'Donation amount must be at least ₹1' });
     }
 
+    if (!mongoose.isValidObjectId(campaignId)) {
+      return res.status(404).json({ message: 'Campaign not found' });
+    }
     const campaign = await Campaign.findById(campaignId);
     if (!campaign) return res.status(404).json({ message: 'Campaign not found' });
 
