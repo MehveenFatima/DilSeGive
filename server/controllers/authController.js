@@ -7,7 +7,7 @@ const SELF_SERVICE_ROLES = { donor: 'Donor', ngo: 'NGO' };
 
 export const signup = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, ngoName } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Name, email and password are required' });
     }
@@ -18,11 +18,14 @@ export const signup = async (req, res) => {
     if (!normalisedRole) {
       return res.status(400).json({ message: 'Role must be either Donor or NGO' });
     }
+    if (normalisedRole === 'NGO' && !ngoName) {
+      return res.status(400).json({ message: 'NGO name is required for NGO accounts' });
+    }
     const userExists = await authService.findUserByEmail(email);
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
     }
-    const user = await authService.createUser({ name, email, password, role: normalisedRole });
+    const user = await authService.createUser({ name, email, password, role: normalisedRole, ngoName });
     const token = authService.generateToken(user._id);
     res.status(201).json({
       token,
