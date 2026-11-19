@@ -86,7 +86,6 @@ const App = () => (
 
 const DashboardRedirect = () => {
   const role = localStorage.getItem("role");
-  console.log("ROLE:", role);
 
   if (role === null) {
     const storedUser = localStorage.getItem("user");

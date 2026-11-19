@@ -201,10 +201,6 @@ export default function NgoDashboard() {
     setActive("Dashboard");
   };
 
-  useEffect(() => {
-    console.log("NGO Dashboard loaded ✅");
-  }, []);
-
   const role = localStorage.getItem("role");
   if (!role) {
     return (
