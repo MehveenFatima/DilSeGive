@@ -104,3 +104,61 @@ npm run dev             # opens on http://localhost:8080
 | `VITE_API_URL` | Backend API base URL (default `http://localhost:5000/api`) |
 
 > Never commit your real `.env` files — they are already listed in `.gitignore`.
+
+## 🔌 API Reference
+
+Base URL: `http://localhost:5000/api`. Routes marked 🔒 need an `Authorization: Bearer <token>` header.
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/health` | Server and database status |
+| `POST` | `/auth/signup` | Register as a Donor or NGO (`name`, `email`, `password`, `role`, `ngoName` for NGOs) |
+| `POST` | `/auth/login` | Log in and receive a JWT |
+| `GET` | `/user/profile` 🔒 | Current user's profile |
+| `GET` | `/user/donations` 🔒 | Current donor's successful donations |
+| `GET` | `/campaigns` | List all campaigns, newest first |
+| `GET` | `/campaigns/:id` | Get one campaign with updates and expenses |
+| `POST` | `/campaigns/seed` 🔒 | Re-seed sample campaigns (Admin only) |
+| `POST` | `/payment/create-checkout-session` 🔒 | Start a Stripe Checkout for a donation (`amount`, `campaignId`) |
+| `POST` | `/payment/verify` | Confirm a Stripe session and record the donation (`sessionId`) |
+
+## 👤 Demo Accounts
+
+The frontend includes demo accounts so you can explore the dashboards right away:
+
+| Role | Email | Password |
+|------|-------|----------|
+| Donor | `donor@test.com` | `123456` |
+| NGO | `ngo@test.com` | `123456` |
+
+For test payments, use Stripe's test card `4242 4242 4242 4242` with any future expiry date and any CVC.
+
+## 📜 Available Scripts
+
+**Frontend (project root)**
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start the Vite dev server |
+| `npm run build` | Build for production into `dist/` |
+| `npm run preview` | Preview the production build |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run unit tests with Vitest |
+
+**Backend (`server/`)**
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start the API with auto-reload (nodemon) |
+| `npm start` | Start the API with Node |
+
+## 🤝 Contributing
+
+1. Fork the repository and create a branch: `git checkout -b feature/your-feature`
+2. Make your changes and run `npm run lint` and `npm test`
+3. Commit with a clear message and open a pull request
+
+## 👩‍💻 Author
+
+**Mehveen Fatima** — B.Tech CSIT, Gokaraju Rangaraju Institute of Engineering and Technology (GRIET), Hyderabad
+GitHub: [@MehveenFatima](https://github.com/MehveenFatima)
