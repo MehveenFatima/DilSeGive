@@ -1,12 +1,11 @@
 // Shared data types used across the DilSeGive frontend.
 
-export type UserRole = "donor" | "ngo" | "admin" | "Donor" | "NGO" | "Admin";
-
 export interface User {
   id: string;
   name: string;
   email: string;
-  role: UserRole;
+  /** donor, ngo or admin (case varies between demo data and the API) */
+  role: string;
   password?: string;
   ngoName?: string;
 }
