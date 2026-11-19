@@ -6,6 +6,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Link } from "react-router-dom";
 import { Bot, BarChart3, ShieldCheck, ArrowRight, IndianRupee, Users, Heart } from "lucide-react";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -25,6 +26,7 @@ const stats = [
 ];
 
 export default function Index() {
+  useDocumentTitle();
   return (
     <div className="min-h-screen bg-background">
       <Navbar />

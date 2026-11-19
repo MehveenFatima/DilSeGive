@@ -5,8 +5,10 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDonation } from "@/context/DonationContext";
 import type { Campaign } from "@/types";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 
 export default function Campaigns() {
+  useDocumentTitle("Campaigns");
   const { campaigns } = useDonation();
   const [campaignList, setCampaignList] = useState<Campaign[]>([]);
   const [isLoading, setIsLoading] = useState(true);

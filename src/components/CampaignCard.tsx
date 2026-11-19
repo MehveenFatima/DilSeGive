@@ -30,9 +30,13 @@ export function CampaignCard({ id, title, ngo, image, raised, goal, category, lo
         <img 
           src={image} 
           alt={title} 
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
           onError={(e) => {
-            (e.currentTarget as HTMLImageElement).src = "https://picsum.photos/300";
+            const target = e.currentTarget as HTMLImageElement;
+            // Guard against an endless loop if the placeholder itself fails
+            if (!target.src.endsWith("/campaign-placeholder.svg")) target.src = "/campaign-placeholder.svg";
           }}
         />
         <div className="absolute top-3 left-3 flex flex-wrap gap-2 pr-3">
