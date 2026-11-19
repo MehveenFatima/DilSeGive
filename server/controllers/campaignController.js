@@ -9,7 +9,7 @@ export const seedCampaigns = async (req, res) => {
         await Campaign.deleteMany();
     }
     const created = await Campaign.insertMany(campaignsData);
-    res.status(201).json({ message: "Successfully seeded 15 campaigns with corrected images", count: created.length });
+    res.status(201).json({ message: `Successfully seeded ${created.length} campaigns`, count: created.length });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
