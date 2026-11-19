@@ -28,6 +28,16 @@ app.get("/test", (req, res) => {
   res.send("Backend working");
 });
 
+// Health check
+app.get('/api/health', (req, res) => {
+  const dbStates = ['disconnected', 'connected', 'connecting', 'disconnecting'];
+  res.status(200).json({
+    status: 'ok',
+    database: dbStates[mongoose.connection.readyState] || 'unknown',
+    uptime: Math.round(process.uptime()),
+  });
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
