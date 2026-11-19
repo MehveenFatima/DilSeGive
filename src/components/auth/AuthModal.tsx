@@ -41,8 +41,6 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'login' }: AuthModalPr
     const inputEmail = formData.email.trim().toLowerCase();
     const inputPassword = formData.password.trim();
     
-    console.log("Login input:", inputEmail, inputPassword);
-    
     try {
       // Exact matching as requested in step 1
       const user = users.find(
@@ -50,11 +48,9 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'login' }: AuthModalPr
           u.email.toLowerCase() === inputEmail &&
           u.password === inputPassword
       );
-      console.log("Found user:", user);
       
       if (user) {
         login(user); // AuthContext will save to localStorage
-        console.log("Stored user:", localStorage.getItem("user"));
         toast.success("Welcome back!");
         
         // Reset form as requested in step 2

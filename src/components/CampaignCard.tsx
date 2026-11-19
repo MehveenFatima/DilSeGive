@@ -21,8 +21,6 @@ export function CampaignCard({ id, title, ngo, image, raised, goal, category, lo
   const navigate = useNavigate();
   const progress = Math.min((raised / goal) * 100, 100);
 
-  console.log("Campaign card data:", { id, title, ngo, image });
-
   return (
     <motion.div
       whileHover={{ y: -4 }}
@@ -34,7 +32,6 @@ export function CampaignCard({ id, title, ngo, image, raised, goal, category, lo
           alt={title} 
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
           onError={(e) => {
-            console.log("Image failed:", image);
             (e.currentTarget as HTMLImageElement).src = "https://picsum.photos/300";
           }}
         />

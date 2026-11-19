@@ -3,12 +3,12 @@ import User from '../models/User.js';
 
 export const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-    expiresIn: '30d',
+    expiresIn: process.env.JWT_EXPIRES_IN || '30d',
   });
 };
 
 export const findUserByEmail = async (email) => {
-  return await User.findOne({ email });
+  return await User.findOne({ email: String(email).trim().toLowerCase() });
 };
 
 export const createUser = async (userData) => {

@@ -146,7 +146,6 @@ export function Navbar() {
                 <Link
                   to="/dashboard"
                   onClick={() => {
-                    console.log("Navigating to dashboard");
                     setMobileOpen(false);
                   }}
                   className={`text-sm font-medium py-2 ${

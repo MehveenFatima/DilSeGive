@@ -77,7 +77,7 @@ const App = () => (
             } 
           />
 
-          <Route path="*" element={<div>Page Not Found</div>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
@@ -86,7 +86,6 @@ const App = () => (
 
 const DashboardRedirect = () => {
   const role = localStorage.getItem("role");
-  console.log("ROLE:", role);
 
   if (role === null) {
     const storedUser = localStorage.getItem("user");

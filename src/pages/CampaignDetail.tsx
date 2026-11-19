@@ -64,8 +64,6 @@ export default function CampaignDetail() {
 
   const progress = Math.min((campaign.raised / campaign.goal) * 100, 100);
 
-  console.log("Campaign data:", campaign);
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -77,7 +75,6 @@ export default function CampaignDetail() {
             alt="Campaign banner"
             className="w-full h-full object-cover"
             onError={(e) => {
-              console.log("Image failed:", campaign?.image);
               (e.currentTarget as HTMLImageElement).src = "https://picsum.photos/300";
             }}
           />
@@ -176,7 +173,6 @@ export default function CampaignDetail() {
                                 alt="proof"
                                 className="rounded-xl object-cover w-full h-40"
                                 onError={(e) => {
-                                  console.log("Proof failed:", img);
                                   (e.currentTarget as HTMLImageElement).src = "https://picsum.photos/300";
                                 }}
                               />

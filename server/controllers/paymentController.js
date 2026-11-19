@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
+import mongoose from 'mongoose';
 import Donation from '../models/Donation.js';
 import Campaign from '../models/Campaign.js';
-import User from '../models/User.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -10,9 +10,17 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const createCheckoutSession = async (req, res) => {
   try {
-    const { amount, campaignId } = req.body;
+    const { campaignId } = req.body;
+    const amount = Number(req.body.amount);
     const donorId = req.user.id;
 
+    if (!Number.isFinite(amount) || amount < 1) {
+      return res.status(400).json({ message: 'Donation amount must be at least ₹1' });
+    }
+
+    if (!mongoose.isValidObjectId(campaignId)) {
+      return res.status(404).json({ message: 'Campaign not found' });
+    }
     const campaign = await Campaign.findById(campaignId);
     if (!campaign) return res.status(404).json({ message: 'Campaign not found' });
 
@@ -26,7 +34,7 @@ export const createCheckoutSession = async (req, res) => {
               name: campaign.title,
               description: `Donation for ${campaign.ngo}`,
             },
-            unit_amount: amount * 100, // Stripe uses paise for INR
+            unit_amount: Math.round(amount * 100), // Stripe uses paise for INR
           },
           quantity: 1,
         },
@@ -59,31 +67,28 @@ export const createCheckoutSession = async (req, res) => {
 export const verifyPayment = async (req, res) => {
   try {
     const { sessionId } = req.body;
+    if (!sessionId) {
+      return res.status(400).json({ message: 'sessionId is required' });
+    }
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     if (session.payment_status === 'paid') {
-      const donation = await Donation.findOne({ stripeSessionId: sessionId });
-      if (!donation || donation.paymentStatus === 'success') {
+      // Atomically flip pending -> success so repeated or concurrent
+      // verify calls can never count the same donation twice
+      const donation = await Donation.findOneAndUpdate(
+        { stripeSessionId: sessionId, paymentStatus: { $ne: 'success' } },
+        { paymentStatus: 'success' },
+        { new: true }
+      );
+      if (!donation) {
         return res.status(200).json({ message: 'Donation already processed or not found' });
       }
 
-      // Update donation status
-      donation.paymentStatus = 'success';
-      await donation.save();
-
-      // Update campaign raised amount
-      const campaign = await Campaign.findById(donation.campaignId);
-      if (campaign) {
-        campaign.raised += donation.amount;
-        await campaign.save();
-      }
-
-      // Update user total donations (if needed - adding field to user model)
-      const user = await User.findById(donation.donorId);
-      if (user) {
-        // We can add a totalDonations field or just track it via donations collection
-        // For simplicity, let's assume we might want to update a field
-      }
+      // Update campaign raised amount atomically to avoid lost updates
+      await Campaign.updateOne(
+        { _id: donation.campaignId },
+        { $inc: { raised: donation.amount } }
+      );
 
       res.status(200).json({ 
         message: 'Payment verified and donation processed successfully',

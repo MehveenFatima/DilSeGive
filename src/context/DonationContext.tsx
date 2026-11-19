@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { campaigns as initialCampaigns } from "@/data/campaigns";
+import { campaigns as staticCampaigns } from "@/data/campaigns";
+
+// Static campaigns can gain uploaded proofs at runtime, so allow an optional proofs list
+type CampaignProof = { id?: string | number; score?: number; [key: string]: unknown };
+type StaticCampaign = (typeof staticCampaigns)[number] & { proofs?: CampaignProof[] };
+const initialCampaigns: StaticCampaign[] = staticCampaigns;
 
 interface DonationContextType {
   campaigns: any[];

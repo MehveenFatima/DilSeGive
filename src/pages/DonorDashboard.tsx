@@ -2,7 +2,6 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { LayoutDashboard, Heart, FileBarChart, User } from "lucide-react";
-import { useEffect } from "react";
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
 
 const sidebarItems = [
@@ -15,10 +14,6 @@ const sidebarItems = [
 export default function DonorDashboard() {
   const location = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log("Donor Dashboard loaded ✅");
-  }, []);
 
   const role = localStorage.getItem("role");
   if (!role) {

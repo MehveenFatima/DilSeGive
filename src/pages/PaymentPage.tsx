@@ -325,7 +325,6 @@ const PaymentPage = () => {
       const existing = JSON.parse(localStorage.getItem("donations") || "[]");
       const updatedDonations = [newDonation, ...existing];
       localStorage.setItem("donations", JSON.stringify(updatedDonations));
-      console.log("Saved Donations:", updatedDonations);
 
       donate(campaign.id, Number(amount));
       setLoading(false);
