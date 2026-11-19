@@ -4,9 +4,10 @@ import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { useEffect, useState } from "react";
 import { campaigns as dummyCampaigns } from "@/data/campaigns";
 import { CampaignCard } from "@/components/CampaignCard";
+import type { Campaign } from "@/types";
 
 export function DonorSummary() {
-  const [campaigns, setCampaigns] = useState<any[]>([]);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
 
   useEffect(() => {
     const formattedData = dummyCampaigns.slice(0, 3).map(c => ({
