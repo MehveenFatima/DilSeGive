@@ -147,7 +147,7 @@ export default function CampaignDetail() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                           {campaign.descriptionImages.map((img: string, idx: number) => (
                             <div key={idx} className="rounded-2xl overflow-hidden border border-border/50 shadow-sm">
-                              <img src={img} className="w-full h-full object-cover max-h-64" alt="description" />
+                              <img src={img} loading="lazy" className="w-full h-full object-cover max-h-64" alt="description" />
                             </div>
                           ))}
                         </div>
@@ -171,6 +171,7 @@ export default function CampaignDetail() {
                               <img
                                 key={index}
                                 src={img}
+                                loading="lazy"
                                 alt="proof"
                                 className="rounded-xl object-cover w-full h-40"
                                 onError={(e) => {
@@ -261,7 +262,7 @@ export default function CampaignDetail() {
                               <div key={proof.id} className="glass-card rounded-2xl overflow-hidden border border-border/50 hover:border-primary/30 transition-colors">
                                 <div className="grid sm:grid-cols-[180px,1fr] gap-0">
                                   <div className="h-40 sm:h-auto overflow-hidden bg-secondary/20">
-                                     <img src={proof.image} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" alt="expense proof" />
+                                     <img src={proof.image} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" alt="expense proof" />
                                   </div>
                                   <div className="p-5 flex flex-col justify-center">
                                     <div className="flex justify-between items-start mb-3">
